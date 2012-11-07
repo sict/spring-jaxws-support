@@ -1,4 +1,4 @@
-See http://www.stalenhoef.eu for updates and usage description.
+See http://www.stalenhoef.eu/2012/11/07/jax-ws-and-spring for a description on how to use this.
 
 1.0.1
 This release provides initial support for exposing JAX-WS annotated classes using the Spring Web Services framework.
