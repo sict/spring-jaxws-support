@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.sict.nl/springjws/Webservice" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ProofOfConcept" targetNamespace="http://www.sict.nl/springjws/Webservice">
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://www.sict.nl/springjws/Webservice">
+			<xsd:element name="XmlRootElementRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="content">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string" />
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+ 			<xsd:element name="XmlRootElementResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="content">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string" />
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:complexType name="XmlType">
+				<xsd:sequence>
+					<xsd:element name="content"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="XmlTypeRequest" type="tns:XmlType"/>
+			<xsd:element name="XmlTypeResponse" type="tns:XmlType"/>
+			
+			<xsd:element name="SameForRequestAndResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="content">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string" />
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			
+			<xsd:element name="OneWayRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="content">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:string" />
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="XmlRootElementRequestMessage">
+		<wsdl:part element="tns:XmlRootElementRequest" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="XmlRootElementResponseMessage">
+		<wsdl:part element="tns:XmlRootElementResponse" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="XmlTypeRequestMessage">
+		<wsdl:part name="parameters" element="tns:XmlTypeRequest"/>
+	</wsdl:message>	
+	<wsdl:message name="XmlTypeResponseMessage">
+		<wsdl:part name="parameters" element="tns:XmlTypeResponse"/>
+	</wsdl:message>	
+	<wsdl:message name="SameForRequestAndResponseMessage">
+		<wsdl:part name="parameters" element="tns:SameForRequestAndResponse"/>
+	</wsdl:message>
+	<wsdl:message name="OneWayRequestMessage">
+		<wsdl:part name="parameters" element="tns:OneWayRequest"/>
+	</wsdl:message>
+	<wsdl:portType name="Webservice">
+		<wsdl:operation name="XmlRootElementOperation">
+			<wsdl:input message="tns:XmlRootElementRequestMessage" />
+			<wsdl:output message="tns:XmlRootElementResponseMessage" />
+		</wsdl:operation>
+		<wsdl:operation name="XmlTypeOperation">
+			<wsdl:input message="tns:XmlTypeRequestMessage"/>
+			<wsdl:output message="tns:XmlTypeResponseMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="SameMessageForRequestAndResponse">
+			<wsdl:input message="tns:SameForRequestAndResponseMessage"/>
+			<wsdl:output message="tns:SameForRequestAndResponseMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="OneWayOperation">
+			<wsdl:input message="tns:OneWayRequestMessage"/>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="WebserviceSOAP" type="tns:Webservice">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="XmlRootElementOperation">
+			<soap:operation soapAction="http://www.sict.nl/springjws/Webservice/XmlRootElementOperation" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="XmlTypeOperation">
+			<soap:operation soapAction="http://www.sict.nl/springjws/Webservice/XmlTypeOperation" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="SameMessageForRequestAndResponse">
+			<soap:operation soapAction="http://www.sict.nl/springjws/Webservice/SameMessageForRequestAndResponse" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="OneWayOperation">
+			<soap:operation soapAction="http://www.sict.nl/springjws/Webservice/OneWayOperation" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="Webservice">
+		<wsdl:port binding="tns:WebserviceSOAP" name="Webservice">
+			<soap:address location="http://localhost:8080/springws-jaxws/service" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>
