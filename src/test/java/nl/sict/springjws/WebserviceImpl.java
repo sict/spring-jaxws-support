@@ -1,16 +1,13 @@
 package nl.sict.springjws;
 
-import javax.jws.Oneway;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
-import javax.jws.WebParam.Mode;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
 import nl.sict.springjws.webservice.OneWayRequest;
 import nl.sict.springjws.webservice.SameForRequestAndResponse;
-import nl.sict.springjws.webservice.Webservice;
 import nl.sict.springjws.webservice.XmlRootElementRequest;
 import nl.sict.springjws.webservice.XmlRootElementResponse;
 import nl.sict.springjws.webservice.XmlType;
@@ -20,7 +17,7 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 
 @WebService
 @Component
-public class WebserviceImpl implements Webservice {
+public class WebserviceImpl extends AbstractWebserviceImpl {
 
 	public void notAnExposedMethod() {
 		
@@ -49,16 +46,15 @@ public class WebserviceImpl implements Webservice {
 		return result;
 	}
 
-	@WebMethod(operationName = "SameMessageForRequestAndResponse", action = "http://www.sict.nl/springjws/Webservice/SameMessageForRequestAndResponse")
-	public void sameMessageForRequestAndResponse(
-			@WebParam(name = "SameForRequestAndResponse", targetNamespace = "http://www.sict.nl/springjws/Webservice", mode = Mode.INOUT, partName = "parameters") Holder<SameForRequestAndResponse> parameters) {
+	// Removed annotations, so they should be found on the interface.
+	public void sameMessageForRequestAndResponse(Holder<SameForRequestAndResponse> parameters) {
 		parameters.value.setContent("sameMessageForRequestAndResponse");
 	}
-
-	@WebMethod(operationName = "OneWayOperation", action = "http://www.sict.nl/springjws/Webservice/OneWayOperation")
-	@Oneway
-	public void oneWayOperation(@WebParam(name = "OneWayRequest", targetNamespace = "http://www.sict.nl/springjws/Webservice", partName = "parameters") OneWayRequest parameters) {
-		
+	
+	@Override
+	// Removed annotations, so they should be found on the  superclass.
+	public void oneWayOperation(OneWayRequest parameters) {
+		super.oneWayOperation(parameters);
 	}
 
 }

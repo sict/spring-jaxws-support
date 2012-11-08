@@ -43,22 +43,22 @@ public class JaxwsMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
 	}
 	
 	private boolean isWebMethod(MethodEndpoint methodEndpoint) {
-		return AnnotationUtils.findAnnotation(methodEndpoint.getMethod(), WebMethod.class) != null;
+		return AnnotationUtilsExt.findAnnotation(methodEndpoint.getMethod(), WebMethod.class) != null;
 	}
 	
 	private boolean parametersAreSupported(MethodEndpoint methodEndpoint) {
 		return methodEndpoint.getMethodParameters().length == 1
-				&& methodEndpoint.getMethodParameters()[0].hasParameterAnnotation(WebParam.class)
+				&& AnnotationUtilsExt.findParameterAnnotation(methodEndpoint.getMethod(), 0, WebParam.class) != null
 				&& isMarshallableType(methodEndpoint.getMethodParameters()[0]);
 	}
 	
 	private boolean isOneWay(MethodEndpoint methodEndpoint) {
 		return Void.TYPE.equals(methodEndpoint.getReturnType().getParameterType()) 
-				&& AnnotationUtils.findAnnotation(methodEndpoint.getMethod(), Oneway.class) != null;
+				&& AnnotationUtilsExt.findAnnotation(methodEndpoint.getMethod(), Oneway.class) != null;
 	}
 	
 	private boolean returnValueIsSupported(MethodEndpoint methodEndpoint) {
-		return 	(AnnotationUtils.findAnnotation(methodEndpoint.getMethod(), WebResult.class) != null && isMarshallableType(methodEndpoint.getReturnType()))
+		return 	(AnnotationUtilsExt.findAnnotation(methodEndpoint.getMethod(), WebResult.class) != null && isMarshallableType(methodEndpoint.getReturnType()))
 				||
 				(hasInOutParameter(methodEndpoint) && isMarshallableType(methodEndpoint.getMethodParameters()[0]))
 				||
@@ -131,9 +131,10 @@ public class JaxwsMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
 	}
 
     private boolean isInOutParameter(MethodParameter parameter) {
-    	return Holder.class.isAssignableFrom(parameter.getParameterType())
-    			&& parameter.hasParameterAnnotation(WebParam.class)
-    			&& parameter.getParameterAnnotation(WebParam.class).mode() == WebParam.Mode.INOUT; 
+    	WebParam webParam = AnnotationUtilsExt.findParameterAnnotation(parameter.getMethod(), parameter.getParameterIndex(), WebParam.class);
+		return Holder.class.isAssignableFrom(parameter.getParameterType())
+    			&& webParam != null
+    			&& webParam.mode() == WebParam.Mode.INOUT; 
     }
     
     private boolean hasInOutParameter(MethodEndpoint methodEndpoint) {

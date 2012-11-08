@@ -19,6 +19,7 @@ import javax.xml.transform.Source;
 
 import nl.sict.springjws.JaxwsEndpointMapping;
 import nl.sict.springjws.webservice.ObjectFactory;
+import nl.sict.springjws.webservice.OneWayRequest;
 import nl.sict.springjws.webservice.SameForRequestAndResponse;
 import nl.sict.springjws.webservice.XmlRootElementRequest;
 import nl.sict.springjws.webservice.XmlType;
@@ -62,8 +63,8 @@ public class JaxwsEndpointMappingTest {
 	@Test
 	public void testMapping() throws Exception {
 		ObjectFactory of = new ObjectFactory();
-		Object[] requestPayloads = { new XmlRootElementRequest(), of.createXmlTypeRequest(new XmlType()), new SameForRequestAndResponse() };
-		String[] serviceMethods = { "xmlRootElementOperation", "xmlTypeOperation", "sameMessageForRequestAndResponse" };
+		Object[] requestPayloads = { new XmlRootElementRequest(), of.createXmlTypeRequest(new XmlType()), new SameForRequestAndResponse(), new OneWayRequest() };
+		String[] serviceMethods = { "xmlRootElementOperation", "xmlTypeOperation", "sameMessageForRequestAndResponse", "oneWayOperation" };
 		assertEquals(requestPayloads.length, serviceMethods.length);
 		
 		for (int i = 0; i < requestPayloads.length; i++) {
@@ -72,7 +73,7 @@ public class JaxwsEndpointMappingTest {
 			
 			MessageContext messageContext = createMessageContext(requestPayload);
 			EndpointInvocationChain endpoint = instance.getEndpoint(messageContext);
-			assertNotNull("Did not find expected endpoint", endpoint);
+			assertNotNull("Did not find expected endpoint " + serviceMethod, endpoint);
 			assertTrue("Expect endpoint to be of type MethodEndpoint", endpoint.getEndpoint() instanceof MethodEndpoint);
 			MethodEndpoint mep = (MethodEndpoint) endpoint.getEndpoint();
 			assertEquals(serviceMethod, mep.getMethod().getName());

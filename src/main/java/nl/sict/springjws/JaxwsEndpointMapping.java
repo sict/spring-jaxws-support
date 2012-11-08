@@ -8,7 +8,6 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.namespace.QName;
 
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.mapping.AbstractAnnotationMethodEndpointMapping;
@@ -30,19 +29,14 @@ public class JaxwsEndpointMapping extends AbstractAnnotationMethodEndpointMappin
 
     @Override
     protected QName getLookupKeyForMethod(Method method) {
-    	WebMethod webMethodAnnotation = AnnotationUtils.findAnnotation(method, WebMethod.class);
+    	WebMethod webMethodAnnotation = AnnotationUtilsExt.findAnnotation(method, WebMethod.class);
     	QName result = null;
         if (webMethodAnnotation != null && method.getParameterTypes().length == 1) {
-        	Annotation[] paramAnnotations = method.getParameterAnnotations()[0];
-        	for (Annotation annotation : paramAnnotations) {
-        		if (annotation instanceof WebParam) {
-        			WebParam webParam = (WebParam) annotation;
-					String namespace = webParam.targetNamespace();
-					String name = webParam.name();
-					result = new QName(namespace, name);
-					
-					break;
-        		}
+        	WebParam webParam = AnnotationUtilsExt.findParameterAnnotation(method, 0, WebParam.class);
+        	if (webParam != null) {
+				String namespace = webParam.targetNamespace();
+				String name = webParam.name();
+				result = new QName(namespace, name);
         	}
         }
         // Debug logging is done by org.springframework.ws.server.endpoint.mapping.AbstractMethodEndpointMapping.registerEndpoint(T, MethodEndpoint),

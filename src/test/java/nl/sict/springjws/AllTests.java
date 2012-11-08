@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ JaxwsEndpointMappingTest.class, JaxwsMethodEndpointAdapterTest.class, JaxwsSupportIntegrationTest.class, XmlTypePayloadMethodProcessorTest.class })
+@SuiteClasses({ AnnotationUtilsExtTest.class, JaxwsEndpointMappingTest.class, JaxwsMethodEndpointAdapterTest.class, JaxwsSupportIntegrationTest.class, XmlTypePayloadMethodProcessorTest.class })
 public class AllTests {
 
 }
