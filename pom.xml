@@ -208,7 +208,6 @@
 		</repository>
 	</repositories>
 	<scm>
-		<connection>scm:git:ssh://git@bitbucket.org/mstalenhoef/javatools.git</connection>
-	  <tag>HEAD</tag>
-  </scm>
+		<connection>scm:git:ssh://git@github.com/sict/spring-jaxws-support.git</connection>
+  	</scm>
 </project>
