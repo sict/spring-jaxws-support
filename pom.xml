@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>nl.sict</groupId>
 	<artifactId>spring-jaxws-support</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<name>JAX-WS support for Spring-WS</name>
 	<dependencies>
 		<dependency>
@@ -209,5 +209,6 @@
 	</repositories>
 	<scm>
 		<connection>scm:git:ssh://git@github.com/sict/spring-jaxws-support.git</connection>
-  	</scm>
+  	  <tag>spring-jaxws-support-1.0.2</tag>
+  </scm>
 </project>
