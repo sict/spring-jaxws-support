@@ -79,5 +79,13 @@ public class JaxwsSupportIntegrationTest {
 			}
 		});
 	}
+	
+	@Test
+	public void testSimpleArgumentAndReturnTypeOperation() throws Exception {
+		Source requestPayload = new StringSource("<StringRequest xmlns=\"http://www.sict.nl/springjws/Webservice\">goes</StringRequest>");
+		Source responsePayload = new StringSource("<ns:StringResponse xmlns:ns=\"http://www.sict.nl/springjws/Webservice\">simpleArgumentAndReturnTypeOperation</ns:StringResponse>");
+		MockWebServiceClient client = MockWebServiceClient.createClient(applicationContext);
+		client.sendRequest(withPayload(requestPayload)).andExpect(payload(responsePayload));
+	}
 
 }

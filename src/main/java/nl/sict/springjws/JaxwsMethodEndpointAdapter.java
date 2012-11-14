@@ -8,12 +8,10 @@ import javax.jws.Oneway;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.ws.Holder;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.core.MethodParameter;
-import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.server.endpoint.MethodEndpoint;
 import org.springframework.ws.server.endpoint.adapter.AbstractMethodEndpointAdapter;
@@ -37,19 +35,14 @@ public class JaxwsMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
 		return actualType;
 	}
 	
-	private boolean isMarshallableType(MethodParameter parameter) {
-		final Class<?> parameterType = getActualType(parameter);
-		return AnnotationUtils.findAnnotation(parameterType, XmlRootElement.class) != null || AnnotationUtils.findAnnotation(parameterType, XmlType.class) != null;
-	}
-	
 	private boolean isWebMethod(MethodEndpoint methodEndpoint) {
 		return AnnotationUtilsExt.findAnnotation(methodEndpoint.getMethod(), WebMethod.class) != null;
 	}
 	
 	private boolean parametersAreSupported(MethodEndpoint methodEndpoint) {
-		return methodEndpoint.getMethodParameters().length == 1
-				&& AnnotationUtilsExt.findParameterAnnotation(methodEndpoint.getMethod(), 0, WebParam.class) != null
-				&& isMarshallableType(methodEndpoint.getMethodParameters()[0]);
+		MethodParameter parameter = methodEndpoint.getMethodParameters().length != 1 ? null : methodEndpoint.getMethodParameters()[0];
+		final WebParam webParam = parameter == null ? null : AnnotationUtilsExt.findParameterAnnotation(parameter.getMethod(), parameter.getParameterIndex(), WebParam.class);
+		return webParam != null && StringUtils.isNotEmpty(webParam.targetNamespace()) && StringUtils.isNotEmpty(webParam.name());
 	}
 	
 	private boolean isOneWay(MethodEndpoint methodEndpoint) {
@@ -58,12 +51,18 @@ public class JaxwsMethodEndpointAdapter extends AbstractMethodEndpointAdapter {
 	}
 	
 	private boolean returnValueIsSupported(MethodEndpoint methodEndpoint) {
-		return 	(AnnotationUtilsExt.findAnnotation(methodEndpoint.getMethod(), WebResult.class) != null && isMarshallableType(methodEndpoint.getReturnType()))
+		final WebResult webResult = AnnotationUtilsExt.findAnnotation(methodEndpoint.getMethod(), WebResult.class);
+		MethodParameter parameter = methodEndpoint.getMethodParameters().length != 1 ? null : methodEndpoint.getMethodParameters()[0];
+		final WebParam webParam = parameter == null ? null : AnnotationUtilsExt.findParameterAnnotation(parameter.getMethod(), parameter.getParameterIndex(), WebParam.class);
+
+		return (webResult != null && !Void.TYPE.equals(methodEndpoint.getReturnType().getParameterType()) && StringUtils.isNotEmpty(webResult.targetNamespace()) && StringUtils.isNotEmpty(webResult.name()))
 				||
-				(hasInOutParameter(methodEndpoint) && isMarshallableType(methodEndpoint.getMethodParameters()[0]))
+				(webParam != null && webParam.mode() == WebParam.Mode.INOUT && Holder.class.isAssignableFrom(parameter.getParameterType()) && StringUtils.isNotEmpty(webParam.targetNamespace()) && StringUtils.isNotEmpty(webParam.name()))
 				||
 				isOneWay(methodEndpoint);
 	}
+		
+			
 	
 	@Override
 	protected boolean supportsInternal(MethodEndpoint methodEndpoint) {

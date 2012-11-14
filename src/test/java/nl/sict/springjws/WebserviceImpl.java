@@ -57,4 +57,10 @@ public class WebserviceImpl extends AbstractWebserviceImpl {
 		super.oneWayOperation(parameters);
 	}
 
+	@WebMethod(operationName = "SimpleArgumentAndReturnTypeOperation", action = "http://www.sict.nl/springjws/Webservice/SimpleArgumentAndReturnTypeOperation")
+	@WebResult(name = "StringResponse", targetNamespace = "http://www.sict.nl/springjws/Webservice", partName = "parameters")
+	public String simpleArgumentAndReturnTypeOperation(@WebParam(name = "StringRequest", targetNamespace = "http://www.sict.nl/springjws/Webservice", partName = "parameters") String parameters) {
+		return "simpleArgumentAndReturnTypeOperation";
+	}
+
 }

@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.namespace.QName;
@@ -63,9 +64,9 @@ public class JaxwsEndpointMappingTest {
 	@Test
 	public void testMapping() throws Exception {
 		ObjectFactory of = new ObjectFactory();
-		Object[] requestPayloads = { new XmlRootElementRequest(), of.createXmlTypeRequest(new XmlType()), new SameForRequestAndResponse(), new OneWayRequest() };
-		String[] serviceMethods = { "xmlRootElementOperation", "xmlTypeOperation", "sameMessageForRequestAndResponse", "oneWayOperation" };
-		assertEquals(requestPayloads.length, serviceMethods.length);
+		Object[] requestPayloads = { new XmlRootElementRequest(), of.createXmlTypeRequest(new XmlType()), new SameForRequestAndResponse(), new OneWayRequest(), new JAXBElement<String>(new QName("http://www.sict.nl/springjws/Webservice", "StringRequest"), String.class, "A simple string") };
+		String[] serviceMethods = { "xmlRootElementOperation", "xmlTypeOperation", "sameMessageForRequestAndResponse", "oneWayOperation", "simpleArgumentAndReturnTypeOperation" };
+		assertEquals("This test needs as many payloads as there are methods", requestPayloads.length, serviceMethods.length);
 		
 		for (int i = 0; i < requestPayloads.length; i++) {
 			Object requestPayload = requestPayloads[i];
@@ -84,6 +85,6 @@ public class JaxwsEndpointMappingTest {
 		field.setAccessible(true);
 		@SuppressWarnings("unchecked")
 		Map<QName, Endpoint> endpointMap = (Map<QName, Endpoint>) ReflectionUtils.getField(field, instance);
-		assertEquals(4, endpointMap.size());
+		assertEquals(5, endpointMap.size());
 	}
 }

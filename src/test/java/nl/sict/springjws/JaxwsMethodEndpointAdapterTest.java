@@ -52,7 +52,8 @@ public class JaxwsMethodEndpointAdapterTest {
 
 	@Test
 	public void testSupportedEndpoints() {
-		String[] methodNames = { "xmlRootElementMethod", "xmlTypeMethod", "holderMethod" };
+//		String[] methodNames = { "xmlRootElementMethod", "xmlTypeMethod", "holderMethod", "simpleArgumentAndReturnType" };
+		String[] methodNames = { "simpleArgumentAndReturnType" };
 		for (String methodName : methodNames) {
 			MethodEndpoint ep = createEndpoint(methodName);
 			assertTrue("Expected to find support for endpoint " + ep.getMethod().getName(), instance.supportsInternal(ep));
@@ -104,6 +105,24 @@ public class JaxwsMethodEndpointAdapterTest {
 		}
 	}
 
+	@Test
+	public void testSimpleArgumentAndReturnType() throws Exception {
+		MethodEndpoint ep = createEndpoint("simpleArgumentAndReturnType");
+		MessageContext messageContext = mock(MessageContext.class);
+		when(mockProcessor.resolveArgument((MessageContext) any(), (MethodParameter) any())).thenReturn("A simple string");
+		instance.invokeInternal(messageContext, ep);
+		verify(mockProcessor).handleReturnValue((MessageContext) any(), (MethodParameter) any(), argThat(new BaseMatcher<Object>() {
+
+			public boolean matches(Object item) {
+				return "Simple string response".equals(item);
+			}
+
+			public void describeTo(Description description) {
+			}
+
+		}));
+	}
+	
 	private MethodEndpoint createEndpoint(String methodName) {
 		Method[] methods = getClass().getDeclaredMethods();
 		for (Method m : methods) {
@@ -155,6 +174,12 @@ public class JaxwsMethodEndpointAdapterTest {
 		return null;
 	}
 
+	@WebMethod
+	@WebResult(targetNamespace = "http://www.sict.nl/springjws", name = "response", partName = "parameters")
+	private String simpleArgumentAndReturnType(@WebParam(targetNamespace = "http://www.sict.nl/springjws", name = "requestParam", partName = "parameters") String request) {
+		return "Simple string response";
+	}
+	
 	@WebMethod
 	@WebResult
 	private String unsupportedReturnType(@WebParam XmlType request) {

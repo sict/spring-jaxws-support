@@ -56,6 +56,18 @@
 					</xsd:sequence>
 				</xsd:complexType>
 			</xsd:element>
+			
+			<xsd:element name="StringRequest">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string"/>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="StringResponse">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string"/>
+				</xsd:simpleType>
+			</xsd:element>
+			
 		</xsd:schema>
 	</wsdl:types>
 	<wsdl:message name="XmlRootElementRequestMessage">
@@ -76,6 +88,12 @@
 	<wsdl:message name="OneWayRequestMessage">
 		<wsdl:part name="parameters" element="tns:OneWayRequest"/>
 	</wsdl:message>
+	<wsdl:message name="StringRequestMessage">
+		<wsdl:part name="parameters" element="tns:StringRequest"/>
+	</wsdl:message>
+	<wsdl:message name="StringResponseMessage">
+		<wsdl:part name="parameters" element="tns:StringResponse"/>
+	</wsdl:message>
 	<wsdl:portType name="Webservice">
 		<wsdl:operation name="XmlRootElementOperation">
 			<wsdl:input message="tns:XmlRootElementRequestMessage" />
@@ -91,6 +109,10 @@
 		</wsdl:operation>
 		<wsdl:operation name="OneWayOperation">
 			<wsdl:input message="tns:OneWayRequestMessage"/>
+		</wsdl:operation>
+		<wsdl:operation name="SimpleArgumentAndReturnTypeOperation">
+			<wsdl:input message="tns:StringRequestMessage"/>
+			<wsdl:output message="tns:StringResponseMessage"/>
 		</wsdl:operation>
 	</wsdl:portType>
 	<wsdl:binding name="WebserviceSOAP" type="tns:Webservice">
@@ -127,6 +149,15 @@
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>
+		</wsdl:operation>
+		<wsdl:operation name="SimpleArgumentAndReturnTypeOperation">
+			<soap:operation soapAction="http://www.sict.nl/springjws/Webservice/SimpleArgumentAndReturnTypeOperation" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
 		</wsdl:operation>
 	</wsdl:binding>
 	<wsdl:service name="Webservice">
